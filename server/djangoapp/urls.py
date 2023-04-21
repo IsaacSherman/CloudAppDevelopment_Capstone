@@ -11,6 +11,7 @@ urlpatterns = [
 
     # path for about view
     path(route="about.html", view=views.about, name='about'),
+    path(route="", view=views.about, name='about'),
     path(route="login.html", view=views.login, name='login'),
     path(route="logout.html", view=views.logout, name='logout'),
     path(route="contact.html", view=views.contact, name='contact'),
