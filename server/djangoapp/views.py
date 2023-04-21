@@ -23,15 +23,36 @@ def about(request):
     if request.method == 'GET':
         return render(request, "djangoapp/about.html", context)
 
-def login(request):
-    context ={}
-    if request.method == 'GET':
-        return render(request, "djangoapp/login.html", context)
+def login_request(request):
+    context = {}
+    # Handles POST request
+    if request.method == "POST":
+        # Get username and password from request.POST dictionary
+        username = request.POST['username']
+        password = request.POST['password']
+        print("logging in {} with password {}".format(username, password))
+        # Try to check if provide credential can be authenticated
+        user = authenticate(username=username, password=password)
+        if user is not None:
+            # If user is valid, call login method to login current user
+            login(request, user)
+            return redirect('djangoapp:about')
+        else:
+            # If not, return to login page again
+            return render(request, 'djangoapp/login.html', context)
+    else:
+        return render(request, 'djangoapp/login.html', context)
 
-def logout(request):
-    context ={}
-    if request.method == 'GET':
-        return render(request, "djangoapp/logout.html", context)
+def logout_request(request):
+    # Get the user object based on session id in request
+    print("Log out the user `{}`".format(request.user.username))
+    # Logout user in the request
+    logout(request)
+    # Redirect user back to course list view
+    return redirect('djangoapp:logout_final')
+
+def logout_final(request):
+    return render(request, "djangoapp/logout.html")
 
 def contact(request):
     context ={}

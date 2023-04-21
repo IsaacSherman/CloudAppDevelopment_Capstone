@@ -12,8 +12,10 @@ urlpatterns = [
     # path for about view
     path(route="about.html", view=views.about, name='about'),
     path(route="", view=views.about, name='about'),
-    path(route="login.html", view=views.login, name='login'),
-    path(route="logout.html", view=views.logout, name='logout'),
+    path(route="login.html", view=views.login_request, name='login_request'),
+    #bogus route, it just needed to be something
+    path(route="logout_request.html", view=views.logout_request, name='logout_request'),
+    path(route="logout.html", view=views.logout_final, name='logout_final'),
     path(route="contact.html", view=views.contact, name='contact'),
 
     path(route="registration.html", view=views.registration, name='registration'),
