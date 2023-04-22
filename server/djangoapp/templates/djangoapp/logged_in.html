@@ -1,0 +1,13 @@
+<!DOCTYPE html>
+<html lang="en">
+   {% extends "djangoapp/index.html" %}
+    {% block content %}
+    {% if error != None %}
+       <h1 class="error"> An error occurred: {{error}} </h1>
+    {% endif%}
+    {%csrf_token%}
+    
+    <h1>You have logged in successfully {{request.user.first_name}}</h1>
+      
+{% endblock content %}
+

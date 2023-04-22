@@ -2,9 +2,9 @@
 <html lang="en">
     {% extends "djangoapp/index.html" %}
     {% block content %}
-    {% if error != '' %}
-        <h1 class="error"> {{error}} </h1>
-        {% endif%}
+    {% if error != None %}
+        <h1 class="error"> An error occurred: {{error}} </h1>
+    {% endif%}
     <form action="{% url 'djangoapp:register' %}"  method="post">
         {% csrf_token %}
         <div class="container">
@@ -28,7 +28,7 @@
           <input type="password" placeholder="Password" name="password2" required>
           <br>
           <div>
-            <button class="button" type="submit">Sign Up</button>
+            <button class="btn btn-primary" type="submit">Sign Up</button>
           </div>
         </div>
       </form>

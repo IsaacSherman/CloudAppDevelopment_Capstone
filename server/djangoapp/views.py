@@ -30,18 +30,24 @@ def login_request(request):
         # Get username and password from request.POST dictionary
         username = request.POST['username']
         password = request.POST['password']
-        print("logging in {} with password {}".format(username, password))
         # Try to check if provide credential can be authenticated
         user = authenticate(username=username, password=password)
         if user is not None:
             # If user is valid, call login method to login current user
+            print("logging in {} with password {}".format(username, password))
             login(request, user)
-            return redirect('djangoapp:about')
+            return redirect('djangoapp:logged_in')
         else:
             # If not, return to login page again
-            return render(request, 'djangoapp/login.html', context)
+            print("logging in {} with password {} FAILED".format(username, password))
+            context["error"] = "Authentication failed."
     else:
-        return render(request, 'djangoapp/login.html', context)
+        context["error"] = "Malformed request."
+
+    return render(request, 'djangoapp/login.html', context)
+
+def logged_in(request):
+    return render(request, "djangoapp/logged_in.html")
 
 def logout_request(request):
     # Get the user object based on session id in request
@@ -71,13 +77,12 @@ def register_request(request):
     if request.method == 'POST':
         if password1 == password2:
             if find_user(username) == None :
-                u = User(is_superuser=false, groups="authorized", 
-                user_permissions=["reviews.add_review"], password=password1, 
-                last_login=datetime.now, username=username, email=request.POST["email"],
-                is_active=True, first_name=request.POST["first_name"],
-                last_name=request.POST["last_name"], is_staff=False,
-                date_joined=datetime.now
-                )
+                now = datetime.now()
+                nowstr = "{}-{}-{} {}:{}".format(now.year, now.month, now.day, now.hour, now.minute)
+                u= User.objects.create_user(username, request.POST["email"], password1)
+                u.first_name =request.POST["first_name"]
+                u.last_name=request.POST["last_name"]
+                u.last_login = u.date_joined = now
                 u.save()
                 return render(request, "djangoapp/about.html", context)
             else:
@@ -108,5 +113,5 @@ def get_dealerships(request):
 def find_user(username):
     try:
         return User.objects.get(username=username)
-    except DoesNotExist:
+    except:
         return None
