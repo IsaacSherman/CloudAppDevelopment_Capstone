@@ -2,7 +2,34 @@
 <html lang="en">
     {% extends "djangoapp/index.html" %}
     {% block content %}
-    <h1 class="">
-        registration
-    </h1>
+    {% if error != '' %}
+        <h1 class="error"> {{error}} </h1>
+        {% endif%}
+    <form action="{% url 'djangoapp:register' %}"  method="post">
+        {% csrf_token %}
+        <div class="container">
+          <h1>Sign Up</h1>
+          <label for="username"><b>User Name:</b></label>
+          <input type="text" placeholder="User Name" name="username" required>
+          <br>
+          <label for="first_name"><b>First Name:</b></label>
+          <input type="text" placeholder="First Name " name="first_name" required>
+          <br>
+          <label for="last_name"><b>Last Name:</b></label>
+          <input type="text" placeholder="Last Name" name="last_name" required>
+          <br>
+          <label for="email"><b>Email:</b></label>
+          <input type="text" placeholder="Email" name="email" required>
+          <br>
+          <label for="password1"><b>Enter Password:</b></label>
+          <input type="password" placeholder="Password: " name="password1" required>
+          <br>
+          <label for="password2"><b>Enter Password (again):</b></label>
+          <input type="password" placeholder="Password" name="password2" required>
+          <br>
+          <div>
+            <button class="button" type="submit">Sign Up</button>
+          </div>
+        </div>
+      </form>
 {% endblock content %}

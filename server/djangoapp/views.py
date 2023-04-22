@@ -64,20 +64,31 @@ def registration(request):
     if request.method == 'GET':
         return render(request, "djangoapp/registration.html", context)
 
-# Create a `contact` view to return a static contact page
-#def contact(request):
+def register_request(request):
+    context ={}
+    username = request.POST["username"]
+    password1, password2 = request.POST["password1"], request.POST["password2"]
+    if request.method == 'POST':
+        if password1 == password2:
+            if find_user(username) == None :
+                u = User(is_superuser=false, groups="authorized", 
+                user_permissions=["reviews.add_review"], password=password1, 
+                last_login=datetime.now, username=username, email=request.POST["email"],
+                is_active=True, first_name=request.POST["first_name"],
+                last_name=request.POST["last_name"], is_staff=False,
+                date_joined=datetime.now
+                )
+                u.save()
+                return render(request, "djangoapp/about.html", context)
+            else:
+                context["error"]="User already exists"
+        else:
+            context["error"] = "Passwords don't match."
+    else:
+        context["error"] = "Invalid request method"
+    return render(request, "djangoapp/registration.html", context)
 
-# Create a `login_request` view to handle sign in request
-# def login_request(request):
-# ...
 
-# Create a `logout_request` view to handle sign out request
-# def logout_request(request):
-# ...
-
-# Create a `registration_request` view to handle sign up request
-# def registration_request(request):
-# ...
 
 # Update the `get_dealerships` view to render the index page with a list of dealerships
 def get_dealerships(request):
@@ -94,3 +105,8 @@ def get_dealerships(request):
 # def add_review(request, dealer_id):
 # ...
 
+def find_user(username):
+    try:
+        return User.objects.get(username=username)
+    except DoesNotExist:
+        return None
