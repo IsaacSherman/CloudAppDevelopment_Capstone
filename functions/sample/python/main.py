@@ -7,6 +7,7 @@ Returns:
 from ibmcloudant.cloudant_v1 import CloudantV1
 from ibm_cloud_sdk_core.authenticators import IAMAuthenticator
 import requests
+import json
 import sys
 #
 #
@@ -17,10 +18,6 @@ import sys
 # @return The output of this action, which must be a JSON object.
 #
 #
-
-
-
-
 def main(param_dict):
     """Main Function
 
@@ -34,5 +31,16 @@ def main(param_dict):
     authenticator = IAMAuthenticator(param_dict["IAM_API_KEY"])
     service = CloudantV1(authenticator=authenticator)
     service.set_service_url(param_dict["COUCH_URL"])
+    resp = service.post_dbs_info(['dealerships'])
+    response = service.post_find(
+        db="dealerships",
+        selector={"id":{'$eq':7}}
+        ).get_result()
 
-    return {"dbs": service.get_all_dbs().get_result()}
+    print(response)
+    return {"info": resp.result}
+
+with open("../../creds.json") as fin:
+    param_dict = json.load(fin)
+butts = main(param_dict)
+print(butts)
