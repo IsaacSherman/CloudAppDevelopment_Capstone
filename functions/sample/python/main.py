@@ -4,11 +4,12 @@
 Returns:
     List: List of reviews for the given dealership
 """
+import json
+import sys
 from ibmcloudant.cloudant_v1 import CloudantV1
 from ibm_cloud_sdk_core.authenticators import IAMAuthenticator
 import requests
-import json
-import sys
+
 #
 #
 # main() will be run when you invoke this action
@@ -60,8 +61,8 @@ def main(param_dict, query=None):
         "result": response
     }
 
-with open("../../creds.json") as fin:
-    param_dict = json.load(fin)
+with open("../../creds.json", encoding='UTF8') as fin:
+    params = json.load(fin)
 query = {
     "selector":{
         "_id":{
@@ -74,5 +75,5 @@ query = {
         }
     ]
 }
-butts = main(param_dict, query)
+butts = main(params, query)
 print(butts)
