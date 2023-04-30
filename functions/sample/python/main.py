@@ -18,7 +18,7 @@ import sys
 # @return The output of this action, which must be a JSON object.
 #
 #
-def main(param_dict):
+def main(param_dict, query):
     """Main Function
 
     Args:
@@ -27,14 +27,26 @@ def main(param_dict):
     Returns:
         json of database names
     """
-
+    if "selector" not in query:
+        raise Exception("Invalid query", "A query must have a selector")
+    if "fields" not in query:
+        fields = list()
+    else:
+        fields = list(query["fields"])
+    if "sort" not in query:
+        sort = list()
+    else:
+        sort = list(query["sort"])
+    selector = dict(query["selector"])
     authenticator = IAMAuthenticator(param_dict["IAM_API_KEY"])
     service = CloudantV1(authenticator=authenticator)
     service.set_service_url(param_dict["COUCH_URL"])
     resp = service.post_dbs_info(['dealerships'])
     response = service.post_find(
         db="dealerships",
-        selector={"id":{'$eq':7}}
+        selector=selector,
+        sort = sort,
+        fields = fields,
         ).get_result()
 
     print(response)
@@ -42,5 +54,17 @@ def main(param_dict):
 
 with open("../../creds.json") as fin:
     param_dict = json.load(fin)
-butts = main(param_dict)
+query = {
+    "selector":{
+        "_id":{
+            "$gt": "0"
+        }
+    },
+    "sort":[
+        {
+            "_id":"desc"
+        }
+    ]
+}
+butts = main(param_dict, query)
 print(butts)
