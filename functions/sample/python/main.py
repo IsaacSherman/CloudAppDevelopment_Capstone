@@ -23,7 +23,10 @@ def main(param_dict, query):
 
     Args:
         param_dict (Dict): json containing COUCH_URL, IAM_API_KEY, and COUCH_USERNAME
-
+        query: object defining the query.  Must contain:
+            selector: a dictonary containing fields to select and  a dictionary for selecting on that field  {"_id":{"$gt":0}}
+            sort(optional): a list containing the dictionary objects defining a sort.  [{"_id": "desc"}, ...]. No sort is applied if none is specified 
+            fields(optional): a list containing the fields to select.  ["_id", "state"].  All fields are selected if none are specified
     Returns:
         json of database names
     """
