@@ -18,18 +18,21 @@ import sys
 # @return The output of this action, which must be a JSON object.
 #
 #
-def main(param_dict, query):
+def main(param_dict, query=None):
     """Main Function
 
     Args:
         param_dict (Dict): json containing COUCH_URL, IAM_API_KEY, and COUCH_USERNAME
-        query: object defining the query.  Must contain:
-            selector: a dictonary containing fields to select and  a dictionary for selecting on that field  {"_id":{"$gt":0}}
-            sort(optional): a list containing the dictionary objects defining a sort.  [{"_id": "desc"}, ...]. No sort is applied if none is specified 
-            fields(optional): a list containing the fields to select.  ["_id", "state"].  All fields are selected if none are specified
+            query: object defining the query.  Must contain:
+                selector: a dictonary containing fields to select and  a dictionary for selecting on that field  {"_id":{"$gt":0}}
+                sort(optional): a list containing the dictionary objects defining a sort.  [{"_id": "desc"}, ...]. No sort is applied if none is specified 
+                fields(optional): a list containing the fields to select.  ["_id", "state"].  All fields are selected if none are specified
     Returns:
         json of database names
     """
+    if not query:
+        query = param_dict["query"]
+        param_dict = param_dict["param_dict"]
     if "selector" not in query:
         raise Exception("Invalid query", "A query must have a selector")
     if "fields" not in query:
@@ -53,7 +56,9 @@ def main(param_dict, query):
         ).get_result()
 
     print(response)
-    return {"info": resp.result}
+    return {"info": resp.result,
+        "result": response
+    }
 
 with open("../../creds.json") as fin:
     param_dict = json.load(fin)
