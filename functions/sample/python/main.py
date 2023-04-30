@@ -5,10 +5,8 @@ Returns:
     List: List of reviews for the given dealership
 """
 import json
-import sys
 from ibmcloudant.cloudant_v1 import CloudantV1
 from ibm_cloud_sdk_core.authenticators import IAMAuthenticator
-import requests
 
 #
 #
@@ -25,9 +23,12 @@ def main(param_dict, query=None):
     Args:
         param_dict (Dict): json containing COUCH_URL, IAM_API_KEY, and COUCH_USERNAME
             query: object defining the query.  Must contain:
-                selector: a dictonary containing fields to select and  a dictionary for selecting on that field  {"_id":{"$gt":0}}
-                sort(optional): a list containing the dictionary objects defining a sort.  [{"_id": "desc"}, ...]. No sort is applied if none is specified 
-                fields(optional): a list containing the fields to select.  ["_id", "state"].  All fields are selected if none are specified
+                selector: a dictonary containing fields to select and a dictionary for
+                 selecting on that field  {"_id":{"$gt":0}}
+                sort(optional): a list containing the dictionary objects defining a sort.
+                  [{"_id": "desc"}, ...]. No sort is applied if none is specified 
+                fields(optional): a list containing the fields to select.  
+                ["_id", "state"].  All fields are selected if none are specified
     Returns:
         json of database names
     """
@@ -35,13 +36,13 @@ def main(param_dict, query=None):
         query = param_dict["query"]
         param_dict = param_dict["param_dict"]
     if "selector" not in query:
-        raise Exception("Invalid query", "A query must have a selector")
+        raise ValueError("Invalid query", "A query must have a selector")
     if "fields" not in query:
-        fields = list()
+        fields = []
     else:
         fields = list(query["fields"])
     if "sort" not in query:
-        sort = list()
+        sort = []
     else:
         sort = list(query["sort"])
     selector = dict(query["selector"])
@@ -63,7 +64,7 @@ def main(param_dict, query=None):
 
 with open("../../creds.json", encoding='UTF8') as fin:
     params = json.load(fin)
-query = {
+queryJson = {
     "selector":{
         "_id":{
             "$gt": "0"
@@ -75,5 +76,5 @@ query = {
         }
     ]
 }
-butts = main(params, query)
+butts = main(params, queryJson)
 print(butts)
