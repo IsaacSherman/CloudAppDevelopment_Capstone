@@ -7,6 +7,7 @@ from django.shortcuts import get_object_or_404, render, redirect
 from django.contrib.auth import login, logout, authenticate
 from django.contrib import messages
 from datetime import datetime
+from urllib.request import urlopen
 import logging
 import json
 
@@ -103,8 +104,15 @@ def get_dealerships(request):
 
 
 # Create a `get_dealer_details` view to render the reviews of a dealer
-# def get_dealer_details(request, dealer_id):
-# ...
+def get_dealer_details(request, dealer_id):
+    url = "https://us-south.functions.appdomain.cloud/api/v1/web/e29a6e0e-0353-4f6d-9381-7d24deb6529f/dealership-package/query-dealerships?id="
+    url += str(dealer_id)
+    response = urlopen(url)
+    data_json = json.loads(response.read())
+    print(data_json)
+    context = data_json[0]
+    return render(request, "djangoapp/dealer_details.html", context)
+
 
 # Create a `add_review` view to submit a review
 # def add_review(request, dealer_id):

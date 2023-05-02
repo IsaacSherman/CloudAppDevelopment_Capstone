@@ -21,16 +21,9 @@ urlpatterns = [
     path(route="logged_in.html", view=views.logged_in, name='logged_in'),
 
     path(route="registration.html", view=views.registration, name='registration'),
-   # path for contact us view
-
-    # path for registration
-
-    # path for login
-
-    # path for logout
 
     path(route='', view=views.get_dealerships, name='index'),
-
+    path(route="details/<int:dealer_id>/", view=views.get_dealer_details, name="dealer-details")
     # path for dealer reviews view
 
     # path for add a review view
