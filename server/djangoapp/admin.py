@@ -7,11 +7,14 @@ from .models import CarMake, CarModel
 # CarModelInline class
 class CarModelInline (admin.StackedInline): 
     model = CarModel
+    
 
 # CarModelAdmin class
 class CarModelAdmin(admin.ModelAdmin):
-    list_display = ("Make","Name", "Type", "Year")
+    list_display = ("Make", "Name", "Type", "Year")
     search_fields = ["Name"]
+    list_filter=  ["Year"]
+
 
 # CarMakeAdmin class with CarModelInline
 class CarMakeAdmin(admin.ModelAdmin):

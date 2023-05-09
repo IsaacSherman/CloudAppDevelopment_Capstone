@@ -49,10 +49,10 @@ class CarModel(models.Model):
         choices=TYPE_CHOICES,
         default=SEDAN
     )
-    Year = models.DateField
+    Year = models.DateField(null=False)
 
     def __str__(self):
-        return f"{Year.year} {Make.__str__} {Name} ({Type})" 
+        return f"{self.Year.year} {self.Make.__str__()} {self.Name} ({self.Type})" 
 
 # <HINT> Create a plain Python class `CarDealer` to hold dealer data
 class CarDealer: 
