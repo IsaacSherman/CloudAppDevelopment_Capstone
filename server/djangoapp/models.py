@@ -76,7 +76,7 @@ class DealerReview:
         self.Review = review
         self.Purchase = purchase 
         self.Purchase_date = purchase_date
-        self.car_make = car_make
-        self.car_model = car_model
-        self.car_year = car_year
+        self.Car_make = car_make
+        self.Car_model = car_model
+        self.Car_year = car_year
 
