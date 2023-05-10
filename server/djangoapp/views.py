@@ -106,7 +106,7 @@ def get_reviews_for_dealer(request, dealer_id):
     context = {}
     url = "https://us-south.functions.appdomain.cloud/api/v1/web/e29a6e0e-0353-4f6d-9381-7d24deb6529f/dealership-package/review?dealershipId="
     url += str(dealer_id)
-    context["reviews"] = get_dealer_reviews_from_cf(url)
+    context["reviews"] = get_dealer_reviews_from_cf(url, request=request)
     return HttpResponse(
         "<br>".join([review.review for review in context["reviews"]]))
 
