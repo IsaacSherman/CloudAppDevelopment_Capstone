@@ -38,6 +38,27 @@ def get_dealers_from_cf(url, **kwargs):
             zip=dealer_doc["zip"])
             results.append(dealer_obj)
     return results
+
+def get_dealer_reviews_from_cf(url, **kwargs):
+    results = []
+    json_result = get_request(url)
+    if json_result:
+        for review in json_result["results"]:
+            obj = DealerReview(
+                dealership=review["dealership"], 
+                name=review["name"], 
+                review=review["review"],
+                purchase=review["purchase"],
+                id=review["id"], 
+                purchase_date=review["purchase_date"],
+                car_make=review["car_make"],
+                car_model=review["car_model"],
+                car_year=review["car_year"],
+                sentiment="positive",#review["sentiment"],#must be coming from somewhere else
+                )
+            results.append(obj)
+    return results
+
 # Create a `post_request` to make HTTP POST requests
 # e.g., response = requests.post(url, params=kwargs, json=payload)
 

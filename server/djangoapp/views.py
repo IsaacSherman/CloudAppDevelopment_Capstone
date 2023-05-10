@@ -8,7 +8,7 @@ from django.contrib.auth import login, logout, authenticate
 from django.contrib import messages
 from datetime import datetime
 from urllib.request import urlopen
-from .restapis import get_dealers_from_cf
+from .restapis import get_dealers_from_cf, get_dealer_reviews_from_cf
 import logging
 import json
 
@@ -95,8 +95,6 @@ def register_request(request):
         context["error"] = "Invalid request method"
     return render(request, "djangoapp/registration.html", context)
 
-
-
 # Update the `get_dealerships` view to render the index page with a list of dealerships
 def get_dealerships(request):
     context = {}
@@ -104,10 +102,17 @@ def get_dealerships(request):
         "https://us-south.functions.appdomain.cloud/api/v1/web/e29a6e0e-0353-4f6d-9381-7d24deb6529f/dealership-package/dealership")
     return HttpResponse(
         "<br>".join([dealer.short_name for dealer in context["dealers"]]))
+def get_reviews_for_dealer(request, dealer_id):
+    context = {}
+    url = "https://us-south.functions.appdomain.cloud/api/v1/web/e29a6e0e-0353-4f6d-9381-7d24deb6529f/dealership-package/review?dealershipId="
+    url += str(dealer_id)
+    context["reviews"] = get_dealer_reviews_from_cf(url)
+    return HttpResponse(
+        "<br>".join([review.review for review in context["reviews"]]))
 
 # Create a `get_dealer_details` view to render the reviews of a dealer
 def get_dealer_details(request, dealer_id):
-    url = "https://us-south.functions.appdomain.cloud/api/v1/web/e29a6e0e-0353-4f6d-9381-7d24deb6529f/dealership-package/query-dealerships?id="
+    url = "https://us-south.functions.appdomain.cloud/api/v1/web/e29a6e0e-0353-4f6d-9381-7d24deb6529f/dealership-package/review?dealershipId="
     url += str(dealer_id)
     response = urlopen(url)
     data_json = json.loads(response.read())

@@ -23,7 +23,7 @@ urlpatterns = [
     path(route="registration.html", view=views.registration, name='registration'),
 
     path(route='dealerships', view=views.get_dealerships, name='dealerships'),
-    path(route="details/<int:dealer_id>/", view=views.get_dealer_details, name="dealer-details")
+    path(route="details/<int:dealer_id>/", view=views.get_reviews_for_dealer, name="dealer-details")
     # path for dealer reviews view
 
     # path for add a review view
