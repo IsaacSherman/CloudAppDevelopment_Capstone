@@ -8,6 +8,7 @@ from django.contrib.auth import login, logout, authenticate
 from django.contrib import messages
 from datetime import datetime
 from urllib.request import urlopen
+from .restapis import get_dealers_from_cf
 import logging
 import json
 
@@ -99,9 +100,10 @@ def register_request(request):
 # Update the `get_dealerships` view to render the index page with a list of dealerships
 def get_dealerships(request):
     context = {}
-    if request.method == "GET":
-        return render(request, 'djangoapp/index.html', context)
-
+    context["dealers"] = get_dealers_from_cf(
+        "https://us-south.functions.appdomain.cloud/api/v1/web/e29a6e0e-0353-4f6d-9381-7d24deb6529f/dealership-package/dealership")
+    return HttpResponse(
+        "<br>".join([dealer.short_name for dealer in context["dealers"]]))
 
 # Create a `get_dealer_details` view to render the reviews of a dealer
 def get_dealer_details(request, dealer_id):
