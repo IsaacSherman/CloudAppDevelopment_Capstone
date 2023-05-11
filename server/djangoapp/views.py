@@ -127,9 +127,10 @@ def add_review(request, id):
     url = "https://us-south.functions.appdomain.cloud/api/v1/web/e29a6e0e-0353-4f6d-9381-7d24deb6529f/dealership-package/review?dealershipId="
     url += str(id)
     context["reviews"] = get_dealer_reviews_from_cf(url, request=request)
-    url2 = "https://us-south.functions.appdomain.cloud/api/v1/web/e29a6e0e-0353-4f6d-9381-7d24deb6529f/dealership-package/review?dealershipId="
-    url += str(id)
-    context["dealer"] = get_dealers_from_cf(url2, request = request,  )
+    url2 = "https://us-south.functions.appdomain.cloud/api/v1/web/e29a6e0e-0353-4f6d-9381-7d24deb6529f/dealership-package/get-dealerships?dealerId="
+    url2 += str(id)
+    context["dealer"] = get_dealers_from_cf(url2, request=request)
+    print(context)
     return render(request, "djangoapp/add_review.html", context)
 
 
