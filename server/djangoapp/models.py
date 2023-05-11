@@ -66,6 +66,9 @@ class CarDealer:
         self.longitude = longitude
         self.short_name = short_name
         self.full_name = full_name
+    
+    def __str__(self):
+        return f"Dealer: {self.full_name}"
 
 # <HINT> Create a plain Python class `DealerReview` to hold review data
 class DealerReview:
@@ -80,4 +83,6 @@ class DealerReview:
         self.car_model = car_model
         self.car_year = car_year
         self.sentiment = sentiment
+    def __str__(self):
+        return f"Review: {self.review}"
 
