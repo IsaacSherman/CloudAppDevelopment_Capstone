@@ -108,7 +108,7 @@ def get_reviews_for_dealer(request, dealer_id):
     url += str(dealer_id)
     context["reviews"] = get_dealer_reviews_from_cf(url, request=request)
     return HttpResponse(
-        "<br>".join([review.sentiment for review in context["reviews"]]))
+        "<br>".join([review.review + ": " + review.sentiment for review in context["reviews"]]))
 
 # Create a `get_dealer_details` view to render the reviews of a dealer
 def get_dealer_details(request, dealer_id):
@@ -122,8 +122,16 @@ def get_dealer_details(request, dealer_id):
 
 
 # Create a `add_review` view to submit a review
-# def add_review(request, dealer_id):
-# ...
+def add_review(request, id):
+    context= {}
+    url = "https://us-south.functions.appdomain.cloud/api/v1/web/e29a6e0e-0353-4f6d-9381-7d24deb6529f/dealership-package/review?dealershipId="
+    url += str(id)
+    context["reviews"] = get_dealer_reviews_from_cf(url, request=request)
+    url2 = "https://us-south.functions.appdomain.cloud/api/v1/web/e29a6e0e-0353-4f6d-9381-7d24deb6529f/dealership-package/review?dealershipId="
+    url += str(id)
+    context["dealer"] = get_dealers_from_cf(url2, request = request,  )
+    return render(request, "djangoapp/add_review.html", context)
+
 
 def find_user(username):
     try:
