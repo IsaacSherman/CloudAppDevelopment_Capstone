@@ -8,6 +8,7 @@ from django.contrib.auth import login, logout, authenticate
 from django.contrib import messages
 from datetime import datetime
 from urllib.request import urlopen
+from django.http import Http404
 from .restapis import get_dealers_from_cf, get_dealer_reviews_from_cf
 import logging
 import json
@@ -129,7 +130,11 @@ def add_review(request, id):
     context["reviews"] = get_dealer_reviews_from_cf(url, request=request)
     url2 = "https://us-south.functions.appdomain.cloud/api/v1/web/e29a6e0e-0353-4f6d-9381-7d24deb6529f/dealership-package/get-dealerships?dealerId="
     url2 += str(id)
-    context["dealer"] = get_dealers_from_cf(url2, request=request)
+    dealers = get_dealers_from_cf(url2, request=request)
+    if len(dealers) < 1:
+        raise Http404
+    context["dealer"] = dealers[0]
+    context["dealerId"] = id
     print(context)
     return render(request, "djangoapp/add_review.html", context)
 

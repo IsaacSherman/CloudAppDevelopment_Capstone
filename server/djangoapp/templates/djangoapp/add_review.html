@@ -13,8 +13,8 @@
             {% for review in reviews %}
                      <div class="card" style="width: 36rem;">
                       <div class="card-body bg-light">
-                          <h5 class="card-title">{{ review.name }}, <span class="text-success">
-                              Review: {{ review.review}} ({{review.sentiment}})</span></h5>
+                          <h5 class="card-title">{{ review.name }} says: <span class="text-success">
+                              {{ review.review}} <img src="/djangoapp/media/emoji/{{review.sentiment}}.png"></span></h5>
                         <p class="card-text">{{ course.description}}</p>
                       </div>
                     </div>

@@ -101,9 +101,9 @@ def analyze_review_sentiments(text):
 # - Call get_request() with specified arguments
 # - Get the returned sentiment label such as Positive or Negative
     url = "https://api.us-south.natural-language-understanding.watson.cloud.ibm.com/instances/8215bb78-6279-4f27-ab7d-f4c029305d5e"
-    key = "".join(["N0AfLO", "gnSKd0y", "JPHZd8CnT_vd", "FiZK7CKhcbX", "vJnHMAzs"])
+    key = "".join(["TV2pCH_","Xhp7xatIQ","e8K7CCPrSf","c0nw7x8dF9","nG34bnRk"])
     auth = HTTPBasicAuth("apikey", key)
-    authenticator = IAMAuthenticator("TV2pCH_Xhp7xatIQe8K7CCPrSfc0nw7x8dF9nG34bnRk")
+    authenticator = IAMAuthenticator(key)
     natural_language_understanding = NaturalLanguageUnderstandingV1(
         version='2023-05-11',
         authenticator=authenticator
