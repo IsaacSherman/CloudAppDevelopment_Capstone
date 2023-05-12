@@ -73,7 +73,7 @@ def get_dealer_reviews_from_cf(url, **kwargs):
                 car_make=review["car_make"],
                 car_model=review["car_model"],
                 car_year=review["car_year"],
-                sentiment="positive",#review["sentiment"],#must be coming from somewhere else
+                sentiment="positive", 
                 )
             obj.sentiment = analyze_review_sentiments(review["review"])
             print(obj.sentiment)
@@ -82,7 +82,9 @@ def get_dealer_reviews_from_cf(url, **kwargs):
 
 # Create a `post_request` to make HTTP POST requests
 # e.g., response = requests.post(url, params=kwargs, json=payload)
-
+def post_request(url, json_payload, **kwargs):
+    requests.post(url, json=json_payload, params=kwargs)
+    
 
 # Create a get_dealers_from_cf method to get dealers from a cloud function
 # def get_dealers_from_cf(url, **kwargs):

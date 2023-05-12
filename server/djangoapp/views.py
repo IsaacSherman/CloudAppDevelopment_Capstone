@@ -8,7 +8,7 @@ from django.contrib.auth import login, logout, authenticate
 from django.contrib import messages
 from datetime import datetime
 from urllib.request import urlopen
-from django.http import Http404
+from django.http import Http404, HttpResponseBadRequest
 from .restapis import get_dealers_from_cf, get_dealer_reviews_from_cf
 import logging
 import json
@@ -123,7 +123,7 @@ def get_dealer_details(request, dealer_id):
 
 
 # Create a `add_review` view to submit a review
-def add_review(request, id):
+def reviews(request, id):
     context= {}
     url = "https://us-south.functions.appdomain.cloud/api/v1/web/e29a6e0e-0353-4f6d-9381-7d24deb6529f/dealership-package/review?dealershipId="
     url += str(id)
@@ -137,6 +137,26 @@ def add_review(request, id):
     context["dealerId"] = id
     print(context)
     return render(request, "djangoapp/add_review.html", context)
+
+def add_review(request):
+    if request.method != "POST":
+        raise HttpResponseBadRequest("Must be completed using a POST method")
+    time = request.POST.get('time')
+    name = request.POST.get('name')
+    dealership = request.POST.get('dealership')
+    review = request.POST.get('review')
+    purchase = request.POST.get('purchase')
+    json_payload = {}
+    json_payload["time"] = time
+    json_payload["name"] = name
+    json_payload["dealership"] = dealership
+    json_payload["review"] = review
+    json_payload["purchase"] = purchase
+    url = 
+    post_request(json_payload=json_payload)  # sending data to post_request method
+    return redirect('reviews')  # redirecting to 'reviews' view
+
+    return render(request, 'form_template.html')  # Replace 'form_template.html' with your actual form template
 
 
 def find_user(username):
