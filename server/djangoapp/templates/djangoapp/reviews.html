@@ -6,16 +6,15 @@
         {% block content %}
         {% if error != None %}
            <h1 class="error"> An error occurred: {{error}} </h1>
-        {% endif%}
-        {%csrf_token%}
-        
+        {% endif%}        
         {%if reviews %}
             {% for review in reviews %}
                      <div class="card" style="width: 36rem;">
                       <div class="card-body bg-light">
-                          <h5 class="card-title">{{ review.name }} says: <span class="text-success">
-                              {{ review.review}} <img src="/djangoapp/media/emoji/{{review.sentiment}}.png"></span></h5>
-                        <p class="card-text">{{ course.description}}</p>
+                          <h5 class="card-title">{{ review.name }} says: 
+                              <span class="text-success">
+                             <img src="/djangoapp/media/emoji/{{review.sentiment}}.png"></span></h5>
+                        <p class="card-text">{{ review.review}}</p>
                       </div>
                     </div>
             {% endfor %}
@@ -23,14 +22,15 @@
             <h5>No reviews yet!  Be the first to leave one.</h5>
         {%endif%}
     {% if user.is_authenticated %}
-            {% csrf_token %}
     <form action="{% url 'djangoapp:add-review' dealerId %}" method="post">
+            {% csrf_token %}
         <label for="name">Name:</label>
         <input type="text" id="name" name="name"/><br><br>
         <label for="review">Review:</label>
         <input type="text" id="review" name="review"/><br><br>
         <label for="purchase">Purchased the Vehicle:</label>
-        <input type="checkbox" id="purchase" name="purchase"/><br><br>
+        <input type="hidden" name="dealership" value={{dealerId}}/>
+        <input type="checkbox" id="purchased" name="purchased"/><br><br>
         <input class="btn btn-primary"  type="submit" value="Submit">
     </form>
     {% endif %}

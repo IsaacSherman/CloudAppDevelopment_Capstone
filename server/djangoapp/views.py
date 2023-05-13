@@ -10,7 +10,7 @@ from datetime import datetime
 from urllib.request import urlopen
 import urllib.parse
 from django.http import Http404, HttpResponseBadRequest
-from .restapis import get_dealers_from_cf, get_dealer_reviews_from_cf
+from .restapis import get_dealers_from_cf, get_dealer_reviews_from_cf, get_request
 import logging
 import json
 
@@ -147,13 +147,17 @@ def add_review(request, id):
     dealership = request.POST.get('dealership')
     review = request.POST.get('review')
     purchase = request.POST.get('purchase')
+    if purchase is None: 
+        purchase = False
+    else:
+        purchase = True
     url = "https://us-south.functions.cloud.ibm.com/api/v1/namespaces/e29a6e0e-0353-4f6d-9381-7d24deb6529f/actions/add_review?time="
     url += str(time)
-    url += "&name=" + name 
-    url += "&dealership=" + dealership
-    url += "&review=" + review
-    url += "&purchase=" + purchase
-    url = urllib.parse.quote(url)
+    url += "&name=" + urllib.parse.quote(name) 
+    url += "&dealership=" + str(id)
+    url += "&review=" + urllib.parse.quote(review)
+    url += "&purchase=" + urllib.parse.quote(str(purchase))
+    context = {"dealerId":str(id)}
     # json_payload = {}
     # json_payload["time"] = time
     # json_payload["name"] = name
@@ -162,7 +166,8 @@ def add_review(request, id):
     # json_payload["purchase"] = purchase
     # post_request(json_payload=json_payload)  # sending data to post_request method
     print(get_request(url))
-    return redirect('reviews')  # redirecting to 'reviews' view
+    return render(request, "djangoapp/reviews.html", context)
+    # redirecting to 'reviews' view
 
 def find_user(username):
     try:
