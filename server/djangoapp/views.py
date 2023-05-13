@@ -8,6 +8,7 @@ from django.contrib.auth import login, logout, authenticate
 from django.contrib import messages
 from datetime import datetime
 from urllib.request import urlopen
+import urllib.parse
 from django.http import Http404, HttpResponseBadRequest
 from .restapis import get_dealers_from_cf, get_dealer_reviews_from_cf
 import logging
@@ -136,9 +137,9 @@ def reviews(request, id):
     context["dealer"] = dealers[0]
     context["dealerId"] = id
     print(context)
-    return render(request, "djangoapp/add_review.html", context)
+    return render(request, "djangoapp/reviews.html", context)
 
-def add_review(request):
+def add_review(request, id):
     if request.method != "POST":
         raise HttpResponseBadRequest("Must be completed using a POST method")
     time = request.POST.get('time')
@@ -146,18 +147,22 @@ def add_review(request):
     dealership = request.POST.get('dealership')
     review = request.POST.get('review')
     purchase = request.POST.get('purchase')
-    json_payload = {}
-    json_payload["time"] = time
-    json_payload["name"] = name
-    json_payload["dealership"] = dealership
-    json_payload["review"] = review
-    json_payload["purchase"] = purchase
-    url = 
-    post_request(json_payload=json_payload)  # sending data to post_request method
+    url = "https://us-south.functions.cloud.ibm.com/api/v1/namespaces/e29a6e0e-0353-4f6d-9381-7d24deb6529f/actions/add_review?time="
+    url += str(time)
+    url += "&name=" + name 
+    url += "&dealership=" + dealership
+    url += "&review=" + review
+    url += "&purchase=" + purchase
+    url = urllib.parse.quote(url)
+    # json_payload = {}
+    # json_payload["time"] = time
+    # json_payload["name"] = name
+    # json_payload["dealership"] = dealership
+    # json_payload["review"] = review
+    # json_payload["purchase"] = purchase
+    # post_request(json_payload=json_payload)  # sending data to post_request method
+    print(get_request(url))
     return redirect('reviews')  # redirecting to 'reviews' view
-
-    return render(request, 'form_template.html')  # Replace 'form_template.html' with your actual form template
-
 
 def find_user(username):
     try:
