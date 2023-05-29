@@ -28,7 +28,7 @@ def get_request(url, auth=None, **kwargs):
         print (f"Network exception occurred")
     status_code = response.status_code
     print(f"Status: {status_code}")
-    print(f"response = {response}")
+    print(f"response = {response.text}")
     if not hasattr(response, "text"):
         return json.loads("{ }")
     try:
@@ -94,6 +94,7 @@ def get_dealer_reviews_from_cf(url, **kwargs):
 def post_request(url, json_payload, **kwargs):
     result = requests.post(url, json=json_payload, params=kwargs)
     print(result)
+    return result
     
 
 # Create a get_dealers_from_cf method to get dealers from a cloud function

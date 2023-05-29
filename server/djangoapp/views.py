@@ -10,7 +10,7 @@ from datetime import datetime
 from urllib.request import urlopen
 import urllib.parse
 from django.http import Http404, HttpResponseBadRequest
-from .restapis import get_dealers_from_cf, get_dealer_reviews_from_cf, get_request
+from .restapis import get_dealers_from_cf, get_dealer_reviews_from_cf, get_request, post_request
 import logging
 import json
 
@@ -151,23 +151,24 @@ def add_review(request, id):
         purchase = False
     else:
         purchase = True
-    url = "https://us-south.functions.cloud.ibm.com/api/v1/namespaces/e29a6e0e-0353-4f6d-9381-7d24deb6529f/actions/add_review?time="
-    url += urllib.parse.quote(str(time)) \
-        + "&name=" + urllib.parse.quote(name) \
-        + "&dealership=" + str(id) \
-        + "&review=" + urllib.parse.quote(review) \
-        + "&purchase=" + urllib.parse.quote(str(purchase))
+    url = "https://us-south.functions.appdomain.cloud/api/v1/web/e29a6e0e-0353-4f6d-9381-7d24deb6529f/dealership-package/add-review"
+    # url += "?time=" + urllib.parse.quote(str(time)) \
+    #     + "&name=" + urllib.parse.quote(name) \
+    #     + "&dealership=" + str(id) \
+    #     + "&review=" + urllib.parse.quote(review) \
+    #     + "&purchase=" + urllib.parse.quote(str(purchase))
     print(url)
     context = {"dealerId":str(id)}
-    # json_payload = {}
-    # json_payload["time"] = time
-    # json_payload["name"] = name
-    # json_payload["dealership"] = dealership
-    # json_payload["review"] = review
-    # json_payload["purchase"] = purchase
+    json_payload = {}
+    json_payload["time"] = str(time)
+    json_payload["name"] = name
+    json_payload["dealership"] = dealership
+    json_payload["review"] = review
+    json_payload["purchase"] = purchase
     # post_request(json_payload=json_payload)  # sending data to post_request method
-    print(get_request(url))
-    return render(request, "djangoapp/reviews.html", context)
+    result = post_request(url, json_payload)
+    print(result.text)
+    return redirect("djangoapp:reviews", id=id)
     # redirecting to 'reviews' view
 
 def find_user(username):
