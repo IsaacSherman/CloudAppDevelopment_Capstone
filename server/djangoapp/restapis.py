@@ -6,7 +6,7 @@ from requests.auth import HTTPBasicAuth
 from ibm_watson import NaturalLanguageUnderstandingV1
 from ibm_cloud_sdk_core.authenticators import IAMAuthenticator
 from ibm_watson.natural_language_understanding_v1 import Features, EntitiesOptions, KeywordsOptions
-
+from datetime import datetime
 
 # Create a `get_request` to make HTTP GET requests
 # e.g., response = requests.get(url, params=params, headers={'Content-Type': 'application/json'},
@@ -63,6 +63,15 @@ def get_dealer_reviews_from_cf(url, **kwargs):
     json_result = get_request(url)
     if json_result:
         for review in json_result["results"]:
+            if "purchase_date" not in review:
+                review["purchase_date"] = datetime.now() 
+            if "car_make" not in review:
+                review["car_make"] = "Unknown" 
+            if "car_model" not in review:
+                review["car_model"] = "Unknown"
+            if "car_year" not in review:
+                review["car_year"] = "Unknown"
+
             obj = DealerReview(
                 dealership=review["dealership"], 
                 name=review["name"], 
@@ -83,7 +92,8 @@ def get_dealer_reviews_from_cf(url, **kwargs):
 # Create a `post_request` to make HTTP POST requests
 # e.g., response = requests.post(url, params=kwargs, json=payload)
 def post_request(url, json_payload, **kwargs):
-    requests.post(url, json=json_payload, params=kwargs)
+    result = requests.post(url, json=json_payload, params=kwargs)
+    print(result)
     
 
 # Create a get_dealers_from_cf method to get dealers from a cloud function

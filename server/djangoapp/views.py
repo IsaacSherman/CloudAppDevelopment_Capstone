@@ -142,7 +142,7 @@ def reviews(request, id):
 def add_review(request, id):
     if request.method != "POST":
         raise HttpResponseBadRequest("Must be completed using a POST method")
-    time = request.POST.get('time')
+    time = datetime.now()
     name = request.POST.get('name')
     dealership = request.POST.get('dealership')
     review = request.POST.get('review')
@@ -152,11 +152,12 @@ def add_review(request, id):
     else:
         purchase = True
     url = "https://us-south.functions.cloud.ibm.com/api/v1/namespaces/e29a6e0e-0353-4f6d-9381-7d24deb6529f/actions/add_review?time="
-    url += str(time)
-    url += "&name=" + urllib.parse.quote(name) 
-    url += "&dealership=" + str(id)
-    url += "&review=" + urllib.parse.quote(review)
-    url += "&purchase=" + urllib.parse.quote(str(purchase))
+    url += urllib.parse.quote(str(time)) \
+        + "&name=" + urllib.parse.quote(name) \
+        + "&dealership=" + str(id) \
+        + "&review=" + urllib.parse.quote(review) \
+        + "&purchase=" + urllib.parse.quote(str(purchase))
+    print(url)
     context = {"dealerId":str(id)}
     # json_payload = {}
     # json_payload["time"] = time
