@@ -27,8 +27,8 @@ def get_request(url, auth=None, **kwargs):
     except:
         print (f"Network exception occurred")
     status_code = response.status_code
-    print(f"Status: {status_code}")
-    print(f"response = {response.text}")
+    # print(f"Status: {status_code}")
+    # print(f"response = {response.text}")
     if not hasattr(response, "text"):
         return json.loads("{ }")
     try:
@@ -40,7 +40,6 @@ def get_request(url, auth=None, **kwargs):
 def get_dealers_from_cf(url, **kwargs):
     results= []
     json_result = get_request(url)["response"]["docs"]
-    print(f"here: {json_result}")
     if json_result:
         for dealer_doc in json_result:
             print(dealer_doc)
@@ -62,22 +61,31 @@ def get_dealer_reviews_from_cf(url, **kwargs):
     results = []
     json_result = get_request(url)
     if json_result:
+        print(json_result)
         for review in json_result["results"]:
-            if "purchase_date" not in review:
-                review["purchase_date"] = datetime.now() 
-            if "car_make" not in review:
-                review["car_make"] = "Unknown" 
-            if "car_model" not in review:
-                review["car_model"] = "Unknown"
-            if "car_year" not in review:
-                review["car_year"] = "Unknown"
+            now = datetime.now()
+            now = f"{now.year}/{now.month}/{now.day} {now.hour}:{now.minute}" 
+            reqs = ['time', 'name','dealership','review','purchase','car_make','car_model','car_year',"purchase_date"]
+            defaults = {
+                'time' : now,
+                'name': 'Unknown',
+                'dealership': "51",
+                'review':   "The user left no review",
+                'purchase': "False",
+                'car_make': "Unknown",
+                'car_model': "Unknown",
+                'car_year':  "Unknown",
+                "purchase_date": now        }
+            for r in reqs:
+                if r not in review:
+                    review[r] = defaults[r]
 
             obj = DealerReview(
                 dealership=review["dealership"], 
                 name=review["name"], 
                 review=review["review"],
                 purchase=review["purchase"],
-                id=review["id"], 
+                id=str(review["dealership"]), 
                 purchase_date=review["purchase_date"],
                 car_make=review["car_make"],
                 car_model=review["car_model"],
@@ -87,13 +95,15 @@ def get_dealer_reviews_from_cf(url, **kwargs):
             obj.sentiment = analyze_review_sentiments(review["review"])
             print(obj.sentiment)
             results.append(obj)
+        # Create document content data
     return results
 
 # Create a `post_request` to make HTTP POST requests
 # e.g., response = requests.post(url, params=kwargs, json=payload)
 def post_request(url, json_payload, **kwargs):
     result = requests.post(url, json=json_payload, params=kwargs)
-    print(result)
+    print(f"Status: {result.status_code}")
+    print(f"response = {result.text}")
     return result
     
 
@@ -131,8 +141,7 @@ def analyze_review_sentiments(text):
     except Exception as e:
         print(e)
         return "neutral"
-    print(response)
-
+    #print("This is a response " + str(response))
     return response["keywords"][0]["sentiment"]["label"]
     # natural_language_understanding.set_service_url(url)
     # features = Features(        

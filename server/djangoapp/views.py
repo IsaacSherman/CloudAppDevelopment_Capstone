@@ -144,7 +144,8 @@ def add_review(request, id):
         raise HttpResponseBadRequest("Must be completed using a POST method")
     time = datetime.now()
     name = request.POST.get('name')
-    dealership = request.POST.get('dealership')
+    dealership = request.POST.get('dealership')[0:-1]
+    print (f"Dealership = {dealership}")
     review = request.POST.get('review')
     purchase = request.POST.get('purchase')
     if purchase is None: 
@@ -157,7 +158,6 @@ def add_review(request, id):
     #     + "&dealership=" + str(id) \
     #     + "&review=" + urllib.parse.quote(review) \
     #     + "&purchase=" + urllib.parse.quote(str(purchase))
-    print(url)
     context = {"dealerId":str(id)}
     json_payload = {}
     json_payload["time"] = str(time)
@@ -166,8 +166,8 @@ def add_review(request, id):
     json_payload["review"] = review
     json_payload["purchase"] = purchase
     # post_request(json_payload=json_payload)  # sending data to post_request method
+    print("Posting to " + url)
     result = post_request(url, json_payload)
-    print(result.text)
     return redirect("djangoapp:reviews", id=id)
     # redirecting to 'reviews' view
 
